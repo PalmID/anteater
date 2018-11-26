@@ -2,5 +2,5 @@
 
 ## 框架
 
-Web: Flask
-API: GraphQL
+- Web: Flask
+- API: GraphQL
