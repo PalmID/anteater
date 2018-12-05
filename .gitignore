@@ -2,6 +2,8 @@
 # Created by https://www.gitignore.io/api/flask,python,pycharm,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=flask,python,pycharm,visualstudiocode
 
+**/.DS_Store
+
 ### Flask ###
 instance/*
 !instance/.gitignore
@@ -266,11 +268,7 @@ pyvenv.cfg
 pip-selfcheck.json
 
 ### VisualStudioCode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.vscode
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files

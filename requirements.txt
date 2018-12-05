@@ -1,4 +1,2 @@
 flask
 gunicorn
-graphene>=2.0
-Flask-GraphQL
