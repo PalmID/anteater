@@ -1,0 +1,30 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[[source]]
+name = "aliyun"
+url = "https://mirrors.aliyun.com/pypi/simple/"
+verify_ssl = true
+
+[dev-packages]
+pytest = {version = "*",index = "aliyun"}
+pytest-cov = {version = "*",index = "aliyun"}
+coverage = {version = ">=4.0",index = "aliyun"}
+flake8 = {version = "*",index = "aliyun"}
+ipython = {version = "*",index = "aliyun"}
+
+[packages]
+flask = {version = "*", index = "aliyun"}
+gunicorn = {version = "*", index = "aliyun"}
+
+[requires]
+python_version = "3.6"
+
+[scripts]
+style_check = "flake8"
+test = "pytest tests --strict -vvl --cov=app --cov-report=term-missing --cov-fail-under=90"
+
+[pipenv]
+allow_prereleases = true
