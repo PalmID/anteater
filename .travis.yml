@@ -3,9 +3,10 @@ sudo: required
 python:
 - 3.6
 env:
-- DOCKER_REGISTRY: "registry.cn-hangzhou.aliyuncs.com/leosocy"
-- IMAGE: "${DOCKER_REGISTRY}/anteater"
-- PIP_CACHE_DIR: "${HOME}/.cache/pip"
+  global:
+  - DOCKER_REGISTRY: "registry.cn-hangzhou.aliyuncs.com/leosocy"
+  - IMAGE: "${DOCKER_REGISTRY}/anteater"
+  - PIP_CACHE_DIR: "${HOME}/.cache/pip"
 
 cache:
   directories:
