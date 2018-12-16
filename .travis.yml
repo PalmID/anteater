@@ -27,7 +27,9 @@ jobs:
     - pipenv install --dev --ignore-pipfile
     script:
     - pipenv run style_check
-    # - pipenv run test
+    - pipenv run test
+    after_success:
+    - pipenv run codecov -t ${CODECOV_TOKEN}
   - stage: build_image
     name: build_image
     if: branch = master

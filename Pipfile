@@ -15,6 +15,7 @@ coverage = "*"
 flake8 = "*"
 ipython = "*"
 pre-commit = "*"
+codecov = "*"
 
 [packages]
 flask = "*"
