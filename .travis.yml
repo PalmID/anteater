@@ -7,13 +7,11 @@ env:
   - DOCKER_REGISTRY: "registry.cn-hangzhou.aliyuncs.com/leosocy"
   - IMAGE: "${DOCKER_REGISTRY}/anteater"
   - PIP_CACHE_DIR: "${HOME}/.cache/pip"
+  - IMAGE_TAG: ${IMAGE}:${TRAVIS_COMMIT:0:8}
 
 cache:
   directories:
   - ${PIP_CACHE_DIR}
-
-before_script:
-- export IMAGE_TAG=${IMAGE}:${TRAVIS_COMMIT:0:8}
 
 stages:
 - test_all
@@ -32,9 +30,9 @@ jobs:
     # - pipenv run test
   - stage: build_image
     name: build_image
-    if: branch = master
+    if: branch = mastergau
     before_script:
-    - docker login -u ${ALIYUN_DOCKER_REGISTRY_USERNAME} -p ${ALIYUN_DOCKER_REGISTRY_PASSWD} ${DOCKER_REGISTRY}
+    - echo "${ALIYUN_DOCKER_REGISTRY_PASSWD}" | docker login -u "${ALIYUN_DOCKER_REGISTRY_USERNAME}" --password-stdin ${DOCKER_REGISTRY}
     script:
     - docker build -t ${IMAGE_TAG} -f Dockerfile .
     - docker push ${IMAGE_TAG}
@@ -43,7 +41,7 @@ jobs:
     if: branch =~ /^feature.*$/ OR branch =~ /^hotfix.*$/
     when: manual
     before_script:
-    - docker login -u ${ALIYUN_DOCKER_REGISTRY_USERNAME} -p ${ALIYUN_DOCKER_REGISTRY_PASSWD} ${DOCKER_REGISTRY}
+    - echo "${ALIYUN_DOCKER_REGISTRY_PASSWD}" | docker login -u "${ALIYUN_DOCKER_REGISTRY_USERNAME}" --password-stdin ${DOCKER_REGISTRY}
     script:
     - docker build -t ${IMAGE_TAG} -f Dockerfile-dev .
     - docker push ${IMAGE_TAG}
