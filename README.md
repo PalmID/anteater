@@ -3,4 +3,4 @@
 ## 框架
 
 - Web: Flask
-- API: GraphQL
+- API: RESTful

@@ -1,0 +1,48 @@
+language: python
+sudo: required
+python:
+- 3.6
+env:
+- DOCKER_REGISTRY: "registry.cn-hangzhou.aliyuncs.com/leosocy"
+- IMAGE: "${DOCKER_REGISTRY}/anteater"
+- PIP_CACHE_DIR: "${HOME}/.cache/pip"
+
+cache:
+  directories:
+  - ${PIP_CACHE_DIR}
+
+before_script:
+- export IMAGE_TAG=${IMAGE}:${TRAVIS_COMMIT:0:8}
+
+stages:
+- test_all
+- build_image
+- deploy
+
+jobs:
+  include:
+  - stage: test_all
+    name: test all
+    before_script:
+    - pip install -i https://mirrors.aliyun.com/pypi/simple pipenv
+    - pipenv install --dev --ignore-pipfile
+    script:
+    - pipenv run style_check
+    - pipenv run test
+  - stage: build_image
+    name: build_image
+    if: branch = master
+    before_script:
+    - docker login -u ${ALIYUN_DOCKER_REGISTRY_USERNAME} -p ${ALIYUN_DOCKER_REGISTRY_PASSWD} ${DOCKER_REGISTRY}
+    script:
+    - docker build -t ${IMAGE_TAG} -f Dockerfile .
+    - docker push ${IMAGE_TAG}
+  - stage: build_image
+    name: build_image_manual
+    if: branch =~ /^feature.*$/ OR branch =~ /^hotfix.*$/
+    when: manual
+    before_script:
+    - docker login -u ${ALIYUN_DOCKER_REGISTRY_USERNAME} -p ${ALIYUN_DOCKER_REGISTRY_PASSWD} ${DOCKER_REGISTRY}
+    script:
+    - docker build -t ${IMAGE_TAG} -f Dockerfile-dev .
+    - docker push ${IMAGE_TAG}

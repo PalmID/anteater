@@ -15,4 +15,4 @@ RUN apk add --no-cache --virtual build-dependencies make cmake linux-headers git
 
 # install pipenv
 RUN pip install -i https://mirrors.aliyun.com/pypi/simple pipenv && \
-    pipenv install --deploy --system
+    pipenv install --dev --system
