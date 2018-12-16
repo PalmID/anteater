@@ -1,23 +1,24 @@
 [[source]]
-name = "pypi"
-url = "https://pypi.org/simple"
-verify_ssl = true
-
-[[source]]
 name = "aliyun"
 url = "https://mirrors.aliyun.com/pypi/simple/"
 verify_ssl = true
 
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
 [dev-packages]
-pytest = {version = "*",index = "aliyun"}
-pytest-cov = {version = "*",index = "aliyun"}
-coverage = {version = ">=4.0",index = "aliyun"}
-flake8 = {version = "*",index = "aliyun"}
-ipython = {version = "*",index = "aliyun"}
+pytest = "*"
+pytest-cov = "*"
+coverage = "*"
+flake8 = "*"
+ipython = "*"
+pre-commit = "*"
 
 [packages]
-flask = {version = "*", index = "aliyun"}
-gunicorn = {version = "*", index = "aliyun"}
+flask = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.6"

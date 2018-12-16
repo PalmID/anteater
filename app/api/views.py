@@ -2,27 +2,33 @@
 # Use of this source code is governed by a MIT-style license
 # that can be found in the LICENSE file.
 
+import time
+
+from flask import current_app, request
 from flask.views import MethodView
-from flask import request, current_app
+
 
 class PalmDetectionView(MethodView):
+    """Detect if there is a palm in the image."""
 
     def post(self):
-        palm = request.files['palm_image']
+        """Create a palm detection job."""
+        palm = request.files["palmimage"]
         if palm:
+            time.sleep(20)
             current_app.logger.info(request.files)
             pass
             # TODO: 创建手掌检测异步任务，获取job_id，异步启动处理
-        return 'detection job id'
+        return "detection job id"
 
     def get(self, job_id):
-        return 'detection get'
+        """Query the status of detection job by job id."""
+        return "detection get"
 
 
-class PalmExtractionView(MethodView):
-
+class ROIExtractionView(MethodView):
     def post(self):
-        return 'extraction job id'
+        return "extraction job id"
 
     def get(self, job_id):
-        return 'extraction get'
+        return "extraction get"
