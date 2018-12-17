@@ -17,9 +17,8 @@ before_cache:
 - >
   mkdir -p ${DOCKER_IMAGE_CACHE_DIR} &&
   docker images -a --filter="dangling=false" --format "{{.Repository}}:{{.Tag}} {{.ID}}" |
-  grep ${IMAGE_TAG} |
-  xargs -n 2 -t sh -c "test -e ${DOCKER_IMAGE_CACHE_DIR}/$1.tar.gz ||
-  docker save $0 | gzip -2 > ${DOCKER_IMAGE_CACHE_DIR}/$1.tar.gz"
+  xargs -n 2 -t sh -c "test -e ${DOCKER_IMAGE_CACHE_DIR}/\$1.tar.gz ||
+  docker save \$0 | gzip -2 > ${DOCKER_IMAGE_CACHE_DIR}/\$1.tar.gz"
 cache:
   directories:
   - ${DOCKER_IMAGE_CACHE_DIR}
