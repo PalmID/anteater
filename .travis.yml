@@ -27,10 +27,10 @@ cache:
 before_install:
 - sudo mkdir -p /etc/docker
 - sudo tee /etc/docker/daemon.json <<-'EOF'
-- {
-- "registry-mirrors": ["https://ml26n6qh.mirror.aliyuncs.com"]
-- }
-- EOF
+  {
+      "registry-mirrors": ["https://ml26n6qh.mirror.aliyuncs.com"]
+  }
+  EOF
 - sudo service docker restart
 
 stages:
