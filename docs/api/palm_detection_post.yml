@@ -1,0 +1,20 @@
+检测图像中是否存在手掌
+---
+tags:
+- detection
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          palm:
+            type: string
+            format: binary
+responses:
+  200:
+    description: OK
+    content:
+      application/json:
+        schema:
+          type: boolean
