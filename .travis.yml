@@ -24,6 +24,17 @@ cache:
   - ${DOCKER_IMAGE_CACHE_DIR}
   - ${PIP_CACHE_DIR}
 
+before_install:
+- sudo mkdir -p /etc/docker
+- >
+  sudo tee /etc/docker/daemon.json <<-'EOF'
+  {
+    "registry-mirrors": ["https://ml26n6qh.mirror.aliyuncs.com"]
+  }
+  EOF
+- sudo systemctl daemon-reload
+- sudo systemctl restart docker
+
 stages:
 - test_all
 - build_image
