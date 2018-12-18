@@ -4,7 +4,7 @@ python:
 - 3.6
 env:
   global:
-  - DOCKER_REGISTRY: "registry.cn-hangzhou.aliyuncs.com/leosocy"
+  - DOCKER_REGISTRY: "leosocy"
   - IMAGE: "${DOCKER_REGISTRY}/anteater"
   - IMAGE_TAG: ${IMAGE}:${TRAVIS_COMMIT:0:8}
   - DOCKER_IMAGE_CACHE_DIR: ${HOME}/.cache/docker
@@ -23,16 +23,6 @@ cache:
   directories:
   - ${DOCKER_IMAGE_CACHE_DIR}
   - ${PIP_CACHE_DIR}
-
-before_install:
-- sudo mkdir -p /etc/docker
-- |
-  sudo tee /etc/docker/daemon.json <<-'EOF'
-  {
-      "registry-mirrors": ["https://ml26n6qh.mirror.aliyuncs.com"]
-  }
-  EOF
-- sudo service docker restart
 
 stages:
 - test_all
@@ -60,8 +50,8 @@ jobs:
       xargs -I {file} sh -c "zcat {file} | docker load"; fi
     before_script:
     - >
-      echo "${ALIYUN_DOCKER_REGISTRY_PASSWD}" |
-      docker login -u "${ALIYUN_DOCKER_REGISTRY_USERNAME}" --password-stdin ${DOCKER_REGISTRY}
+      echo "${HUB_DOCKER_REGISTRY_PASSWD}" |
+      docker login -u "${HUB_DOCKER_REGISTRY_USERNAME}" --password-stdin
     script:
     - docker build -t ${IMAGE_TAG} -f Dockerfile .
     - docker push ${IMAGE_TAG}
@@ -75,8 +65,8 @@ jobs:
       xargs -I {file} sh -c "zcat {file} | docker load"; fi
     before_script:
     - >
-      echo "${ALIYUN_DOCKER_REGISTRY_PASSWD}" |
-      docker login -u "${ALIYUN_DOCKER_REGISTRY_USERNAME}" --password-stdin ${DOCKER_REGISTRY}
+      echo "${HUB_DOCKER_REGISTRY_PASSWD}" |
+      docker login -u "${HUB_DOCKER_REGISTRY_USERNAME}" --password-stdin
     script:
     - docker build -t ${IMAGE_TAG} -f Dockerfile-dev .
     - docker push ${IMAGE_TAG}

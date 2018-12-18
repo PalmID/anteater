@@ -1,4 +1,4 @@
-FROM registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:python
+FROM leosocy/opencv:python
 
 # install RobustPalmRoi library
 RUN apk add --no-cache --virtual build-dependencies make cmake linux-headers git && \
