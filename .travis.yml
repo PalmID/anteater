@@ -56,9 +56,8 @@ jobs:
     - docker build -t ${IMAGE_TAG} -f Dockerfile .
     - docker push ${IMAGE_TAG}
   - stage: build_image
-    name: build_image_manual
+    name: build_image_dev
     if: branch =~ /^feature.*$/ OR branch =~ /^hotfix.*$/
-    when: manual
     before_install:
     - >
       if [[ -d ${DOCKER_IMAGE_CACHE_DIR} ]]; then ls ${DOCKER_IMAGE_CACHE_DIR}/*.tar.gz |
