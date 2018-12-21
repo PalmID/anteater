@@ -1,0 +1,82 @@
+stages:
+- test_all
+- build_image
+- deploy
+
+image: "docker:stable"
+
+services:
+- docker:dind
+
+variables:
+  PROJECT_NAME: "anteater"
+  DOCKER_REGISTRY: "leosocy"
+  IMAGE: "${DOCKER_REGISTRY}/${PROJECT_NAME}"
+  CI_IMAGE: "${DOCKER_REGISTRY}/opencv:ci"
+  CACHE_IMAGE: "${DOCKER_REGISTRY}/opencv:python"
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  DOCKER_IMAGE_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/docker/"
+  PIP_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/pip/"
+
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+  - ${DOCKER_IMAGE_CACHE_DIR}
+  - ${PIP_CACHE_DIR}
+
+before_script:
+- IMAGE_TAG="${IMAGE}:${CI_COMMIT_SHA:0:8}"
+- >
+  echo ${HUB_DOCKER_REGISTRY_PASSWD} |
+  docker login --username "${HUB_DOCKER_REGISTRY_USERNAME}" --password-stdin
+- >
+  if [[ $(ls ${DOCKER_IMAGE_CACHE_DIR} | wc -l) != 0 ]]; then ls ${DOCKER_IMAGE_CACHE_DIR}/*.tar.gz |
+  xargs -I {file} sh -c "zcat {file} | docker load"; fi
+after_script:
+- >
+  mkdir -p ${DOCKER_IMAGE_CACHE_DIR} &&
+  docker images -a --filter="dangling=false" --format "{{.Repository}}:{{.Tag}} {{.ID}}" |
+  grep ${CACHE_IMAGE} |
+  xargs -n 2 -t sh -c "test -e ${DOCKER_IMAGE_CACHE_DIR}/\$1.tar.gz ||
+  docker save \$0 | gzip -2 > ${DOCKER_IMAGE_CACHE_DIR}/\$1.tar.gz"
+
+################################ test ################################
+test_all:
+  stage: test_all
+  image: "${CI_IMAGE}"
+  variables:
+    GIT_STRATEGY: fetch
+  before_script:
+  - pip install -i https://mirrors.aliyun.com/pypi/simple pipenv
+  - pipenv install --dev --ignore-pipfile
+  script:
+  - pipenv run style_check
+  - pipenv run test
+  after_script:
+  - pipenv run codecov -t ${CODECOV_TOKEN}
+
+################################ build image ################################
+build_image:
+  stage: build_image
+  variables:
+    GIT_STRATEGY: fetch
+  only:
+  - master
+  script:
+  - docker build -t ${IMAGE_TAG} -f Dockerfile .
+  - docker push ${IMAGE_TAG}
+build_image_dev:
+  stage: build_image
+  variables:
+    GIT_STRATEGY: fetch
+  only:
+  - /^feature.*$/
+  - /^hotfix.*$/
+  when: manual
+  script:
+  - docker build -t ${IMAGE_TAG} -f Dockerfile-dev .
+  - docker push ${IMAGE_TAG}
+
+################################ deployings ################################
+

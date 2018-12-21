@@ -56,7 +56,7 @@ jobs:
     - docker build -t ${IMAGE_TAG} -f Dockerfile .
     - docker push ${IMAGE_TAG}
   - stage: build_image
-    name: build_image_dev
+    name: build_image_manual
     if: branch =~ /^feature.*$/ OR branch =~ /^hotfix.*$/
     before_install:
     - >
