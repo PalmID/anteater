@@ -6,13 +6,8 @@ import json
 import time
 
 from flasgger import swag_from
-from flask import Response, render_template, request, send_file
+from flask import Response, request, send_file
 from flask.views import MethodView
-
-
-class ApiRootView(MethodView):
-    def get(self):
-        return render_template("fine_uploader/index.html")
 
 
 class PalmDetectionView(MethodView):

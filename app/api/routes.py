@@ -4,11 +4,10 @@
 
 from flask import Blueprint
 
-from .views import ApiRootView, PalmDetectionView, ROIExtractionView
+from .views import PalmDetectionView, ROIExtractionView
 
 bp = Blueprint("api", __name__)
 
-bp.add_url_rule("/", view_func=ApiRootView.as_view("root"), methods=["GET"])
 bp.add_url_rule(
     "/detection",
     view_func=PalmDetectionView.as_view("palm_detection"),

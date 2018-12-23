@@ -2,39 +2,50 @@
 # Use of this source code is governed by a MIT-style license
 # that can be found in the LICENSE file.
 
-import logging
+import os
+import sys
+import inspect
 from flask import Flask
-from flasgger import Swagger
+
+from werkzeug.utils import import_string
 
 
-def create_app():
-    app = Flask(__name__)
+class App(Flask):
+    def _register_extension(self, name, ext):
+        ext.init_app(self)
+        if name not in self.extensions:
+            self.extensions[name] = ext
 
-    from app.api import bp as api_bp
+    def load_extensions(self):
+        def is_ext(ext):
+            return not inspect.isclass(ext) and hasattr(ext, "init_app")
 
-    app.register_blueprint(api_bp, url_prefix="/anteater/api")
+        module = import_string("app.extensions")
+        for name, ext in inspect.getmembers(module, is_ext):
+            self._register_extension(name, ext)
+        return self.extensions
 
-    stream_handler = logging.StreamHandler()
-    stream_handler.setLevel(logging.INFO)
-    app.logger.addHandler(stream_handler)
+    def register_blueprints(self):
+        from app.api import bp as api_bp
 
-    app.logger.info("Anteater startup")
+        self.register_blueprint(api_bp, url_prefix="/anteater/api")
 
-    Swagger(
-        app,
-        config={
-            "headers": [],
-            "specs": [{"endpoint": "apispec", "route": "/anteater/apispec.json"}],
-            "swagger_ui_bundle_js": "//unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js",
-            "swagger_ui_standalone_preset_js": "//unpkg.com/swagger-ui-dist@3/swagger-ui-standalone-preset.js",
-            "jquery_js": "//unpkg.com/jquery@2.2.4/dist/jquery.min.js",
-            "swagger_ui_css": "//unpkg.com/swagger-ui-dist@3/swagger-ui.css",
-            "static_url_path": "/anteater/flasgger_static",
-            "swagger_ui": True,
-            "uiversion": 3,
-            "specs_route": "/anteater/apidocs",
-            "openapi": "3.0.1",
-        },
-    )
+    def ready():
+        pass
 
+
+def create_app(root_path=None):
+    if root_path is None:
+        root_path = os.getcwd()
+    sys.path.append(root_path)
+    env = os.getenv("FLASK_ENV", "development")
+    config = import_string("configs.{}".format(env))
+    app_cls = import_string("app:App")
+
+    app = app_cls(__name__, root_path=root_path)
+    app.config.from_object(config)
+
+    app.load_extensions()
+    app.register_blueprints()
+    app.app_context().push()
     return app

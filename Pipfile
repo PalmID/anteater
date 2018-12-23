@@ -26,9 +26,9 @@ flasgger = ">=0.9.2"
 python_version = "3.6"
 
 [scripts]
-server = "gunicorn -c gunicorn.py anteater:app"
 style_check = "flake8"
 test = "pytest tests --strict -vvl --cov=app --cov-report=term-missing --cov-fail-under=90"
+server = "gunicorn -c gunicorn.py anteater:app"
 
 [pipenv]
 allow_prereleases = true
