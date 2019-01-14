@@ -5,15 +5,16 @@
 import json
 import time
 
-from flasgger import swag_from
 from flask import Response, request, send_file
 from flask.views import MethodView
 
+from app.extensions import swagger
 
-class PalmDetectionView(MethodView):
+
+class PalmDetectionJobsView(MethodView):
     """Detect if there is a palm in the image."""
 
-    @swag_from("../../docs/api/palm_detection_post.yml")
+    @swagger.swag_from("api/palm_detection_jobs_post.yaml")
     def post(self):
         """Create a palm detection job."""
         # palm = request.files["palmimage"]
@@ -24,20 +25,35 @@ class PalmDetectionView(MethodView):
         time.sleep(5)
         return Response(json.dumps({}), status=200, mimetype="application/json")
 
-    def get(self):
+
+class PalmDetectionJobView(MethodView):
+    @swagger.swag_from("api/palm_detection_job_get.yaml")
+    def get(self, job_id):
         """Query the status of detection job by job id."""
         return "detection get"
 
 
-class ROIExtractionView(MethodView):
-    @swag_from("../../docs/api/roi_extraction_post.yml")
+class RoiExtractionJobsView(MethodView):
+    @swagger.swag_from("api/roi_extraction_jobs_post.yaml")
     def post(self):
         palm = request.files.get("palm_image")
         if palm:
-            return send_file(
-                "../../../../../Desktop/left_palm_left_rotating.jpg", "image/png"
+            return Response(
+                {"job_id": "123", "state": 0, "errmsg": "", "roi_image": palm},
+                status=200,
+                mimetype="multipart/form-data",
             )
-        return Response({"success": True}, status=200, mimetype="application/json")
 
-    def get(self):
+
+class RoiExtractionJobView(MethodView):
+    @swagger.swag_from("api/roi_extraction_job_get.yaml")
+    def get(self, job_id):
         return "extraction get"
+
+
+class RoiExtractionImageView(MethodView):
+    @swagger.swag_from("api/roi_extraction_image_get.yaml")
+    def get(self, job_id):
+        return send_file(
+            "../EDCC-Palmprint-Recognition/database/Tongji/ROI/session1/00001.bmp"
+        )

@@ -1,4 +1,4 @@
-提取手掌图像的ROI
+创建一个手掌ROI提取异步任务
 ---
 tags:
 - extraction
@@ -15,9 +15,7 @@ requestBody:
             format: binary
 responses:
   200:
-    description: OK
     content:
-      image/png:
+      application/json:
         schema:
-          type: string
-          format: binary
+          $ref: '#/definitions/ExtractionJobResult'

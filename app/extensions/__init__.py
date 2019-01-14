@@ -5,4 +5,4 @@
 from .swagger import Swagger
 
 
-swagger = Swagger()
+swagger = Swagger(template_file="docs/openapi_template.yaml")

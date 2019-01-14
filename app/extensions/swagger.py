@@ -5,8 +5,7 @@
 import os
 from functools import wraps
 
-from flasgger import Swagger as SwaggerBase
-from flasgger import swag_from
+from flasgger import Swagger as SwaggerBase, swag_from
 
 
 class Swagger(SwaggerBase):
@@ -19,7 +18,7 @@ class Swagger(SwaggerBase):
     def swag_from(self, doc_name, **swag_kwargs):
         def decorator(view_func):
             abs_doc_path = os.path.join(self.docs_root, doc_name)
-            wrap_func = swag_from(specs=abs_doc_path, **swag_kwargs)
+            wrap_func = swag_from(specs=abs_doc_path, **swag_kwargs)(view_func)
 
             @wraps(view_func)
             def wrapper(*args, **kwargs):

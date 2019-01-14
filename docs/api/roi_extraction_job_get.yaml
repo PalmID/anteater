@@ -1,0 +1,21 @@
+根据job_id查询手掌ROI提取进度
+---
+tags:
+- extraction
+parameters:
+- name: job_id
+  in: query
+  required: true
+  schema:
+    type: string
+    example: "qwert"
+responses:
+  200:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/ExtractionJobResult'
+  404:
+    description: "Job id not found"
+  429:
+    description: "Too Many Requests"

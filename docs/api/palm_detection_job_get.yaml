@@ -1,0 +1,21 @@
+根据job_id查询手掌检测进度
+---
+tags:
+- detection
+parameters:
+- name: job_id
+  in: query
+  required: true
+  schema:
+    type: string
+    example: "qwert"
+responses:
+  200:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/DetectionJobResult'
+  404:
+    description: "Job id not found"
+  429:
+    description: "Too Many Requests"

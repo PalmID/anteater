@@ -4,17 +4,38 @@
 
 from flask import Blueprint
 
-from .views import PalmDetectionView, ROIExtractionView
+from .views import (
+    PalmDetectionJobsView,
+    PalmDetectionJobView,
+    RoiExtractionImageView,
+    RoiExtractionJobsView,
+    RoiExtractionJobView,
+)
 
 bp = Blueprint("api", __name__)
 
 bp.add_url_rule(
-    "/detection",
-    view_func=PalmDetectionView.as_view("palm_detection"),
-    methods=["GET", "POST"],
+    "/detection/jobs",
+    view_func=PalmDetectionJobsView.as_view("palm_detection_jobs"),
+    methods=["POST"],
 )
 bp.add_url_rule(
-    "/extraction",
-    view_func=ROIExtractionView.as_view("roi_extraction"),
-    methods=["GET", "POST"],
+    "/detection/jobs/<job_id>",
+    view_func=PalmDetectionJobView.as_view("palm_detection_job"),
+    methods=["GET"],
+)
+bp.add_url_rule(
+    "/extraction/jobs",
+    view_func=RoiExtractionJobsView.as_view("roi_extraction_jobs"),
+    methods=["POST"],
+)
+bp.add_url_rule(
+    "/extraction/jobs/<job_id>",
+    view_func=RoiExtractionJobView.as_view("roi_extraction_job"),
+    methods=["GET"],
+)
+bp.add_url_rule(
+    "/extraction/jobs/<job_id>/roi",
+    view_func=RoiExtractionImageView.as_view("roi_extraction_job_image"),
+    methods=["GET"],
 )
