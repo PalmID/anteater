@@ -10,12 +10,13 @@ services:
 
 variables:
   PROJECT_NAME: "anteater"
+  MYSQL_DATABASE: "anteater_test"
+  MYSQL_ROOT_PASSWORD: "666toor666"
   DOCKER_REGISTRY: "leosocy"
   IMAGE: "${DOCKER_REGISTRY}/${PROJECT_NAME}"
-  CI_IMAGE: "${DOCKER_REGISTRY}/opencv:ci"
-  CACHE_IMAGE: "${DOCKER_REGISTRY}/opencv:python"
+  CI_IMAGE: "${DOCKER_REGISTRY}/robustpalmroi:v0.1.1"
+  CACHE_IMAGE: ${CI_IMAGE}
   DOCKER_HOST: tcp://docker:2375
-  DOCKER_DRIVER: overlay2
   DOCKER_IMAGE_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/docker/"
   PIP_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/pip/"
 
@@ -45,11 +46,16 @@ after_script:
 test_all:
   stage: test_all
   image: "${CI_IMAGE}"
-  variables:
-    GIT_STRATEGY: fetch
+  services:
+  - name: mysql:5.7
+    alias: mysql
+    command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+  - name: redis:4
+    alias: redis
   before_script:
+  - apk add git
   - pip install -i https://mirrors.aliyun.com/pypi/simple pipenv
-  - pipenv install --dev --ignore-pipfile
+  - pipenv install --dev --deploy
   script:
   - pipenv run style_check
   - pipenv run test
@@ -59,24 +65,19 @@ test_all:
 ################################ build image ################################
 build_image:
   stage: build_image
-  variables:
-    GIT_STRATEGY: fetch
   only:
   - master
   script:
   - docker build -t ${IMAGE_TAG} -f Dockerfile .
   - docker push ${IMAGE_TAG}
-build_image_dev:
+build_image_manual:
   stage: build_image
-  variables:
-    GIT_STRATEGY: fetch
   only:
   - /^feature.*$/
-  - /^hotfix.*$/
+  - /^fix.*$/
   when: manual
   script:
-  - docker build -t ${IMAGE_TAG} -f Dockerfile-dev .
+  - docker build -t ${IMAGE_TAG} -f Dockerfile .
   - docker push ${IMAGE_TAG}
 
 ################################ deployings ################################
-

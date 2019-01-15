@@ -1,4 +1,4 @@
-# Copyright (c) 2018 leosocy. All rights reserved.
+# Copyright (c) 2019 leosocy. All rights reserved.
 # Use of this source code is governed by a MIT-style license
 # that can be found in the LICENSE file.
 
@@ -29,9 +29,6 @@ class App(Flask):
         from app.api import bp as api_bp
 
         self.register_blueprint(api_bp, url_prefix="/anteater/api")
-
-    def ready():
-        pass
 
 
 def create_app(root_path=None):

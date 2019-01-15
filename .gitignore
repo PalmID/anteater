@@ -3,6 +3,7 @@
 # Edit at https://www.gitignore.io/?templates=flask,python,pycharm,visualstudiocode
 
 **/.DS_Store
+.idea
 
 ### Flask ###
 instance/*

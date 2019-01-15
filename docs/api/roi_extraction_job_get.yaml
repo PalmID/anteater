@@ -1,4 +1,4 @@
-根据job_id查询手掌ROI提取进度
+根据job_id查询手掌ROI提取进度，如果提取成功会返回roi图像
 ---
 tags:
 - extraction
@@ -15,6 +15,10 @@ responses:
       application/json:
         schema:
           $ref: '#/definitions/ExtractionJobResult'
+      image/png:
+        schema:
+          type: string
+          format: binary
   404:
     description: "Job id not found"
   429:
