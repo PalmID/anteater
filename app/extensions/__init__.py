@@ -2,6 +2,9 @@
 # Use of this source code is governed by a MIT-style license
 # that can be found in the LICENSE file.
 
-from .routes import bp
+from peeweext.flask import Peeweext
 
-__all__ = ["bp"]
+from .swagger import Swagger
+
+pwx = Peeweext()
+swagger = Swagger(template_file="docs/openapi_template.yaml")

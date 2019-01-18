@@ -1,0 +1,21 @@
+创建一个手掌ROI提取异步任务
+---
+tags:
+- extraction
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+        - palm_image
+        properties:
+          palm_image:
+            type: string
+            format: binary
+responses:
+  200:
+    content:
+      application/json:
+        schema:
+          $ref: '#/definitions/ExtractionJobResult'

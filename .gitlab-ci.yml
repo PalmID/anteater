@@ -1,0 +1,62 @@
+stages:
+- test_all
+- build_image
+- deploy
+
+image: "docker:stable"
+
+services:
+- docker:dind
+
+variables:
+  MYSQL_DATABASE: "anteater_test"
+  MYSQL_ROOT_PASSWORD: "666toor666"
+  FLASK_ENV: testing
+  IMAGE: "leosocy/anteater"
+  CI_IMAGE: "leosocy/anteater:ci"
+  DOCKER_HOST: tcp://docker:2375
+  PIP_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/pip/"
+
+before_script:
+- IMAGE_TAG="${IMAGE}:${CI_COMMIT_SHA:0:8}"
+- >
+  echo ${HUB_DOCKER_REGISTRY_PASSWD} |
+  docker login --username "${HUB_DOCKER_REGISTRY_USERNAME}" --password-stdin
+
+################################ test ################################
+test_all:
+  stage: test_all
+  image: "${CI_IMAGE}"
+  services:
+  - name: mysql:5.7
+    alias: mysql
+    command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+  - name: redis:4
+    alias: redis
+  before_script:
+  - pipenv install --dev --deploy
+  script:
+  - pipenv run style_check
+  - pipenv run test
+  after_script:
+  - pipenv run codecov -t ${CODECOV_TOKEN}
+
+################################ build image ################################
+build_image:
+  stage: build_image
+  only:
+  - master
+  script:
+  - docker build -t ${IMAGE_TAG} -f Dockerfile .
+  - docker push ${IMAGE_TAG}
+build_image_manual:
+  stage: build_image
+  only:
+  - /^feature.*$/
+  - /^fix.*$/
+  when: manual
+  script:
+  - docker build -t ${IMAGE_TAG} -f Dockerfile .
+  - docker push ${IMAGE_TAG}
+
+################################ deployings ################################

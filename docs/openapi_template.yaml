@@ -1,0 +1,36 @@
+openapi: 3.0.0
+info:
+  title: anteater docs templates
+  version: 0.1.0
+definitions:
+  DetectionJobResult:
+    type: object
+    properties:
+      job_id:
+        type: string
+        description: "job id对应的short url编码"
+        example: "qwert"
+      state:
+        type: integer
+        enum: [0, 1, 2, 3, 4]
+        description: "0:Unknown 1:Submitted 2:Detecting 3:DetectFail 4:DetectSuccess"
+      errmsg:
+        type: string
+        description: "检测出错时的错误信息"
+      score:
+        type: number
+        description: "图像中存在手掌的概率得分，越接近1代表存在手掌的概率越大"
+  ExtractionJobResult:
+    type: object
+    properties:
+      job_id:
+        type: string
+        description: "job id对应的short url编码"
+        example: "qwert"
+      state:
+        type: integer
+        enum: [0, 1, 2, 3, 4]
+        description: "0:Unknown 1:Submitted 2:Extracting 3:ExtractFail 4:ExtractSuccess"
+      errmsg:
+        type: string
+        description: "提取出错时的错误信息"
