@@ -31,7 +31,6 @@ python_version = "3.6"
 [scripts]
 style_check = "flake8"
 test = "pytest tests --strict -vvl --cov=app --cov-report=term-missing --cov-fail-under=90"
-server = "gunicorn -c gunicorn.py anteater:app"
 
 [pipenv]
 allow_prereleases = true

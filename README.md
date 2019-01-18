@@ -8,6 +8,8 @@
 
 - Web: Flask
 - API: RESTful
+- DB: MySQL + Redis
+- MQ: celery + RabbitMQ
 
 ## APIs
 

@@ -9,3 +9,7 @@ from flask import Response
 
 def JsonResponse(data=None, code=200):
     return Response(json.dumps(data or {}), status=code, mimetype="application/json")
+
+
+def enum2choices(enum):
+    return tuple((f.value, f.name) for f in enum)
