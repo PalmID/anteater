@@ -1,4 +1,9 @@
 [[source]]
+name = "aliyun"
+url = "https://mirrors.aliyun.com/pypi/simple/"
+verify_ssl = true
+
+[[source]]
 name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
@@ -18,13 +23,11 @@ seed-isort-config = "*"
 codecov = "*"
 
 [packages]
-Flask = ">=1.0"
+flask = "*"
 gunicorn = {version = "*",extras = ["gevent"]}
 flasgger = ">=0.9.2"
-orator = ">=0.9.8"
 peewee = ">=3.8.0"
-peeweext = "==0.7.4"
-pendulum = "<2.0,>=1.5.0"
+peeweext = ">=0.7.0"
 mysqlclient = "*"
 
 [requires]
