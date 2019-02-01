@@ -15,8 +15,8 @@ class RoiExtractionJobsView(MethodView):
         palm = request.files.get("palm_image")
         if not palm:
             # TODO: 异步任务提取roi
-            return JsonResponse(data={"errmsg": "Must provide palm image"}, code=400)
-        return JsonResponse(data={})
+            return JsonResponse(msg="must provide palm image", code=400)
+        return JsonResponse()
 
 
 class RoiExtractionJobView(MethodView):

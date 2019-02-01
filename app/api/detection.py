@@ -17,8 +17,8 @@ class PalmDetectionJobsView(MethodView):
         palm = request.files.get("palm_image")
         if not palm:
             # TODO: 创建手掌检测异步任务，获取job_id，异步启动处理
-            return JsonResponse(data={"errmsg": "Must provide palm image"}, code=400)
-        return JsonResponse(data={})
+            return JsonResponse(msg="must provide palm image", code=400)
+        return JsonResponse()
 
 
 class PalmDetectionJobView(MethodView):

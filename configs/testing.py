@@ -1,8 +1,6 @@
-# Copyright (c) 2019 leosocy. All rights reserved.
-# Use of this source code is governed by a MIT-style license
-# that can be found in the LICENSE file.
+# flake8: noqa
 
-from configs.default import *  # noqa
+from configs.default import *
 
 TESTING = True
 
